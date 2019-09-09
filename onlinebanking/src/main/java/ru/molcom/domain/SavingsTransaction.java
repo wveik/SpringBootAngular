@@ -3,44 +3,37 @@ package ru.molcom.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class PrimaryTransaction {
-    private Long primaryTransactionId;
+public class SavingsTransaction {
+    private Long savingsTransactionId;
     private Date date;
     private String description;
     private String type;
     private String status;
     private double amount;
     private BigDecimal availableBalance;
-    private PrimaryAccount primaryAccount;
 
-    public PrimaryTransaction() {
+    private SavingsAccount savingsAccount;
+
+    public SavingsTransaction() {
     }
 
-    public PrimaryTransaction(Long primaryTransactionId, Date date, String description, String type, String status, double amount, BigDecimal availableBalance, PrimaryAccount primaryAccount) {
-        this.primaryTransactionId = primaryTransactionId;
+    public SavingsTransaction(Long savingsTransactionId, Date date, String description, String type, String status, double amount, BigDecimal availableBalance, SavingsAccount savingsAccount) {
+        this.savingsTransactionId = savingsTransactionId;
         this.date = date;
         this.description = description;
         this.type = type;
         this.status = status;
         this.amount = amount;
         this.availableBalance = availableBalance;
-        this.primaryAccount = primaryAccount;
+        this.savingsAccount = savingsAccount;
     }
 
-    public PrimaryAccount getPrimaryAccount() {
-        return primaryAccount;
+    public Long getSavingsTransactionId() {
+        return savingsTransactionId;
     }
 
-    public void setPrimaryAccount(PrimaryAccount primaryAccount) {
-        this.primaryAccount = primaryAccount;
-    }
-
-    public Long getPrimaryTransactionId() {
-        return primaryTransactionId;
-    }
-
-    public void setPrimaryTransactionId(Long primaryTransactionId) {
-        this.primaryTransactionId = primaryTransactionId;
+    public void setSavingsTransactionId(Long savingsTransactionId) {
+        this.savingsTransactionId = savingsTransactionId;
     }
 
     public Date getDate() {
@@ -89,5 +82,13 @@ public class PrimaryTransaction {
 
     public void setAvailableBalance(BigDecimal availableBalance) {
         this.availableBalance = availableBalance;
+    }
+
+    public SavingsAccount getSavingsAccount() {
+        return savingsAccount;
+    }
+
+    public void setSavingsAccount(SavingsAccount savingsAccount) {
+        this.savingsAccount = savingsAccount;
     }
 }
