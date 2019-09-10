@@ -1,10 +1,15 @@
 package ru.molcom.domain;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Entity
 public class SavingsTransaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long savingsTransactionId;
+
     private Date date;
     private String description;
     private String type;
@@ -12,6 +17,7 @@ public class SavingsTransaction {
     private double amount;
     private BigDecimal availableBalance;
 
+    @ManyToOne(targetEntity = SavingsAccount.class)
     private SavingsAccount savingsAccount;
 
     public SavingsTransaction() {

@@ -1,14 +1,20 @@
 package ru.molcom.domain;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Appointment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long appointmentId;
+
     private Date date;
     private String location;
     private String description;
     private boolean confirmed;
 
+    @ManyToOne(targetEntity = User.class)
     private User user;
 
     public Long getAppointmentId() {

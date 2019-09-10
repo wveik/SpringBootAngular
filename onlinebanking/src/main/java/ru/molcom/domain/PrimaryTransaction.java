@@ -1,16 +1,23 @@
 package ru.molcom.domain;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Entity
 public class PrimaryTransaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long primaryTransactionId;
+
     private Date date;
     private String description;
     private String type;
     private String status;
     private double amount;
     private BigDecimal availableBalance;
+
+    @ManyToOne(targetEntity = PrimaryAccount.class)
     private PrimaryAccount primaryAccount;
 
     public PrimaryTransaction() {

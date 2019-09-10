@@ -1,10 +1,14 @@
 package ru.molcom.domain;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
+@Entity
 @Table(name = "userr")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
     private String userName;
     private String password;
@@ -15,13 +19,17 @@ public class User {
 
     private boolean enabled = true;
 
+    @ManyToOne(targetEntity = PrimaryAccount.class)
     private PrimaryAccount primaryAccount;
 
+    @ManyToOne(targetEntity = SavingsAccount.class)
     private SavingsAccount savingsAccount;
 
-    private List<Appointment> appointmentList;
+    @OneToMany(targetEntity=Appointment.class, fetch=FetchType.EAGER)
+    private Set<Appointment> appointmentList;
 
-    private List<Recipient> recipientList;
+    @OneToMany(targetEntity=Recipient.class, fetch=FetchType.EAGER)
+    private Set<Recipient> recipientList;
 
     public Long getUserId() {
         return userId;
@@ -103,19 +111,19 @@ public class User {
         this.savingsAccount = savingsAccount;
     }
 
-    public List<Appointment> getAppointmentList() {
+    public Set<Appointment> getAppointmentList() {
         return appointmentList;
     }
 
-    public void setAppointmentList(List<Appointment> appointmentList) {
+    public void setAppointmentList(Set<Appointment> appointmentList) {
         this.appointmentList = appointmentList;
     }
 
-    public List<Recipient> getRecipientList() {
+    public Set<Recipient> getRecipientList() {
         return recipientList;
     }
 
-    public void setRecipientList(List<Recipient> recipientList) {
+    public void setRecipientList(Set<Recipient> recipientList) {
         this.recipientList = recipientList;
     }
 }

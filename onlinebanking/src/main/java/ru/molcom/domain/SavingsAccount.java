@@ -1,14 +1,19 @@
 package ru.molcom.domain;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
+@Entity
 public class SavingsAccount {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long savingId;
     private int accountNumber;
     private BigDecimal accountBalance;
 
-    private List<SavingsTransaction> savingsTransactions;
+    @OneToMany(targetEntity=SavingsTransaction.class, fetch=FetchType.EAGER)
+    private Set<SavingsTransaction> savingsTransactions;
 
     public Long getSavingId() {
         return savingId;
@@ -34,11 +39,11 @@ public class SavingsAccount {
         this.accountBalance = accountBalance;
     }
 
-    public List<SavingsTransaction> getSavingsTransactions() {
+    public Set<SavingsTransaction> getSavingsTransactions() {
         return savingsTransactions;
     }
 
-    public void setSavingsTransactions(List<SavingsTransaction> savingsTransactions) {
+    public void setSavingsTransactions(Set<SavingsTransaction> savingsTransactions) {
         this.savingsTransactions = savingsTransactions;
     }
 }

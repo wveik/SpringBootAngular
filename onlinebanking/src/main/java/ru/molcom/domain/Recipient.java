@@ -1,13 +1,20 @@
 package ru.molcom.domain;
 
+import javax.persistence.*;
+
+@Entity
 public class Recipient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long recipientId;
+
     private String name;
     private String email;
     private String phone;
     private String accountNumber;
     private String description;
 
+    @ManyToOne(targetEntity = User.class)
     private User user;
 
     public Long getRecipientId() {
