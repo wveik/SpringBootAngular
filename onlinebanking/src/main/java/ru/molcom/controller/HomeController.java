@@ -6,14 +6,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.molcom.dao.IRoleDao;
 import ru.molcom.domain.User;
+import ru.molcom.domain.security.UserRole;
 import ru.molcom.service.interfaces.IUserService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class HomeController {
 
     @Autowired
-    public IUserService userService;
+    private IUserService userService;
+
+    @Autowired
+    private IRoleDao roleDao;
 
     @RequestMapping("/")
     public String home() {
@@ -48,19 +56,13 @@ public class HomeController {
             }
 
             return "signup";
-        } /*else {
+        } else {
             Set<UserRole> userRoles = new HashSet<>();
             userRoles.add(new UserRole(user, roleDao.findByName("ROLE_USER")));
 
             userService.createUser(user, userRoles);
 
-            return "redirect:/";
-        }*/
-        else {
-
-            userService.save(user);
-
-            return "redirect:/";
+            return "redirect:/index";
         }
     }
 }

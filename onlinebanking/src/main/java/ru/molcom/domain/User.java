@@ -1,35 +1,59 @@
 package ru.molcom.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import ru.molcom.domain.security.Authority;
+import ru.molcom.domain.security.UserRole;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "userr")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userId", nullable = false, updatable = false)
     private Long userId;
     private String userName;
     private String password;
     private String firstName;
     private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     private String phone;
 
-    private boolean enabled = true;
+    private boolean enabled=true;
 
-    @ManyToOne(targetEntity = PrimaryAccount.class)
+    @OneToOne
     private PrimaryAccount primaryAccount;
 
-    @ManyToOne(targetEntity = SavingsAccount.class)
+    @OneToOne
     private SavingsAccount savingsAccount;
 
-    @OneToMany(targetEntity=Appointment.class, fetch=FetchType.EAGER)
-    private Set<Appointment> appointmentList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Appointment> appointmentList;
 
-    @OneToMany(targetEntity=Recipient.class, fetch=FetchType.EAGER)
-    private Set<Recipient> recipientList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recipient> recipientList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    public Set<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
 
     public Long getUserId() {
         return userId;
@@ -43,16 +67,8 @@ public class User {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
     public String getFirstName() {
@@ -87,12 +103,33 @@ public class User {
         this.phone = phone;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public List<Appointment> getAppointmentList() {
+        return appointmentList;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setAppointmentList(List<Appointment> appointmentList) {
+        this.appointmentList = appointmentList;
+    }
+
+    public List<Recipient> getRecipientList() {
+        return recipientList;
+    }
+
+    public void setRecipientList(List<Recipient> recipientList) {
+        this.recipientList = recipientList;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getUserName();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public PrimaryAccount getPrimaryAccount() {
@@ -111,19 +148,54 @@ public class User {
         this.savingsAccount = savingsAccount;
     }
 
-    public Set<Appointment> getAppointmentList() {
-        return appointmentList;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public void setAppointmentList(Set<Appointment> appointmentList) {
-        this.appointmentList = appointmentList;
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", appointmentList=" + appointmentList +
+                ", recipientList=" + recipientList +
+                ", userRoles=" + userRoles +
+                '}';
     }
 
-    public Set<Recipient> getRecipientList() {
-        return recipientList;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+        return authorities;
     }
 
-    public void setRecipientList(Set<Recipient> recipientList) {
-        this.recipientList = recipientList;
+    @Override
+    public boolean isAccountNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
 }

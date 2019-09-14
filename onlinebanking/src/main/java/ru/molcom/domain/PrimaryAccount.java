@@ -13,6 +13,9 @@ public class PrimaryAccount {
     private int accountName;
     private BigDecimal accountBalance;
 
+
+    private int accountNumber;
+
     @OneToMany(targetEntity=PrimaryTransaction.class, fetch=FetchType.EAGER)
     private Set<PrimaryTransaction> primaryTransactionList;
 
@@ -46,5 +49,13 @@ public class PrimaryAccount {
 
     public void setPrimaryTransactionList(Set<PrimaryTransaction> primaryTransactionList) {
         this.primaryTransactionList = primaryTransactionList;
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

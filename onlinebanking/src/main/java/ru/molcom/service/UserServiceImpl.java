@@ -1,18 +1,32 @@
 package ru.molcom.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.molcom.dao.IUserDao;
+import ru.molcom.dao.IRoleDao;
 import ru.molcom.domain.User;
+import ru.molcom.domain.security.UserRole;
+import ru.molcom.service.interfaces.IAccountService;
 import ru.molcom.service.interfaces.IUserService;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
     @Autowired
     public IUserDao userDao;
+
+    @Autowired
+    private IRoleDao roleDao;
+
+    @Autowired
+    private IAccountService accountService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public void save(User user) {
         userDao.save(user);
@@ -70,6 +84,31 @@ public class UserServiceImpl implements IUserService {
         System.out.println(user.isEnabled());
         userDao.save(user);
         System.out.println(userName + " is disabled.");
+    }
+
+    public User createUser(User user, Set<UserRole> userRoles) //throws IllegalArgumentException
+        {
+        User localUser = userDao.findByUserName(user.getUsername());
+
+        if (localUser != null) {
+            //throw new IllegalArgumentException("\"User with username {} already exist. Nothing will be done. \", " + user.getUsername());
+        } else {
+            String encryptedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encryptedPassword);
+
+            for (UserRole ur : userRoles) {
+                roleDao.save(ur.getRole());
+            }
+
+            user.getUserRoles().addAll(userRoles);
+
+            user.setPrimaryAccount(accountService.createPrimaryAccount());
+            user.setSavingsAccount(accountService.createSavingsAccount());
+
+            localUser = userDao.save(user);
+        }
+
+        return localUser;
     }
 }
 

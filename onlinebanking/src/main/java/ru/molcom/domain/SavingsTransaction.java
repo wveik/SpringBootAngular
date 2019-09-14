@@ -23,8 +23,7 @@ public class SavingsTransaction {
     public SavingsTransaction() {
     }
 
-    public SavingsTransaction(Long savingsTransactionId, Date date, String description, String type, String status, double amount, BigDecimal availableBalance, SavingsAccount savingsAccount) {
-        this.savingsTransactionId = savingsTransactionId;
+    public SavingsTransaction(Date date, String description, String type, String status, double amount, BigDecimal availableBalance, SavingsAccount savingsAccount) {
         this.date = date;
         this.description = description;
         this.type = type;

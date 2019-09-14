@@ -23,8 +23,7 @@ public class PrimaryTransaction {
     public PrimaryTransaction() {
     }
 
-    public PrimaryTransaction(Long primaryTransactionId, Date date, String description, String type, String status, double amount, BigDecimal availableBalance, PrimaryAccount primaryAccount) {
-        this.primaryTransactionId = primaryTransactionId;
+    public PrimaryTransaction(Date date, String description, String type, String status, double amount, BigDecimal availableBalance, PrimaryAccount primaryAccount) {
         this.date = date;
         this.description = description;
         this.type = type;
